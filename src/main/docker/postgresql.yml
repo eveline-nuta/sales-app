@@ -1,0 +1,11 @@
+version: '2'
+services:
+    salesapp-postgresql:
+        image: postgres:10.4
+        # volumes:
+        #     - ~/volumes/jhipster/salesApp/postgresql/:/var/lib/postgresql/data/
+        environment:
+            - POSTGRES_USER=salesApp
+            - POSTGRES_PASSWORD=
+        ports:
+            - 5432:5432
