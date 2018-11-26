@@ -1,0 +1,60 @@
+<div>
+    <h2 id="page-heading">
+        <span>Receipts</span>
+        <button id="jh-create-entity" class="btn btn-primary float-right jh-create-entity create-receipt" [routerLink]="['/receipt/new']">
+            <fa-icon [icon]="'plus'"></fa-icon>
+            <span >
+            Create new Receipt
+            </span>
+        </button>
+    </h2>
+    <jhi-alert></jhi-alert>
+    <br/>
+    <div class="table-responsive" *ngIf="receipts">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+            <th><span>ID</span></th>
+            <th><span>Receipt Number</span></th>
+            <th><span>Date</span></th>
+            <th><span>Payment Amount</span></th>
+            <th><span>Cashier Name</span></th>
+            <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let receipt of receipts ;trackBy: trackId">
+                <td><a [routerLink]="['/receipt', receipt.id, 'view' ]">{{receipt.id}}</a></td>
+                <td>{{receipt.receiptNumber}}</td>
+                <td>{{receipt.date}}</td>
+                <td>{{receipt.paymentAmount}}</td>
+                <td>{{receipt.cashierName}}</td>
+                <td class="text-right">
+                    <div class="btn-group flex-btn-group-container">
+                        <button type="submit"
+                                [routerLink]="['/receipt', receipt.id, 'view' ]"
+                                class="btn btn-info btn-sm">
+                            <fa-icon [icon]="'eye'"></fa-icon>
+                            <span class="d-none d-md-inline">View</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/receipt', receipt.id, 'edit']"
+                                class="btn btn-primary btn-sm">
+                            <fa-icon [icon]="'pencil-alt'"></fa-icon>
+                            <span class="d-none d-md-inline">Edit</span>
+                        </button>
+                        <button type="submit"
+                                [routerLink]="['/', { outlets: { popup: 'receipt/'+ receipt.id + '/delete'} }]"
+                                replaceUrl="true"
+                                queryParamsHandling="merge"
+                                class="btn btn-danger btn-sm">
+                            <fa-icon [icon]="'times'"></fa-icon>
+                            <span class="d-none d-md-inline">Delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

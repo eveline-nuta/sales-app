@@ -1,0 +1,39 @@
+<div class="row justify-content-center">
+    <div class="col-8">
+        <div *ngIf="receipt">
+            <h2><span>Receipt</span> {{receipt.id}}</h2>
+            <hr>
+            <jhi-alert-error></jhi-alert-error>
+            <dl class="row-md jh-entity-details">
+                <dt><span>Receipt Number</span></dt>
+                <dd>
+                    <span>{{receipt.receiptNumber}}</span>
+                </dd>
+                <dt><span>Date</span></dt>
+                <dd>
+                    <span>{{receipt.date}}</span>
+                </dd>
+                <dt><span>Payment Amount</span></dt>
+                <dd>
+                    <span>{{receipt.paymentAmount}}</span>
+                </dd>
+                <dt><span>Cashier Name</span></dt>
+                <dd>
+                    <span>{{receipt.cashierName}}</span>
+                </dd>
+            </dl>
+
+            <button type="submit"
+                    (click)="previousState()"
+                    class="btn btn-info">
+                <fa-icon [icon]="'arrow-left'"></fa-icon>&nbsp;<span> Back</span>
+            </button>
+
+            <button type="button"
+                    [routerLink]="['/receipt', receipt.id, 'edit']"
+                    class="btn btn-primary">
+                <fa-icon [icon]="'pencil-alt'"></fa-icon>&nbsp;<span> Edit</span>
+            </button>
+        </div>
+    </div>
+</div>

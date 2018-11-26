@@ -1,0 +1,31 @@
+{
+    "name": "Receipt",
+    "fields": [
+        {
+            "fieldName": "receiptNumber",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "date",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "paymentAmount",
+            "fieldType": "String"
+        },
+        {
+            "fieldName": "cashierName",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [],
+    "changelogDate": "20181121162621",
+    "entityTableName": "receipt",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

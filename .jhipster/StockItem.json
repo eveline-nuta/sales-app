@@ -1,0 +1,30 @@
+{
+    "name": "StockItem",
+    "fields": [
+        {
+            "fieldName": "numberOfProducts",
+            "fieldType": "Integer"
+        },
+        {
+            "fieldName": "barcode",
+            "fieldType": "String"
+        }
+    ],
+    "relationships": [
+        {
+            "relationshipType": "one-to-many",
+            "relationshipName": "product",
+            "otherEntityName": "product",
+            "otherEntityRelationshipName": "stockItem"
+        }
+    ],
+    "changelogDate": "20181121162619",
+    "entityTableName": "stock_item",
+    "dto": "no",
+    "pagination": "no",
+    "service": "no",
+    "jpaMetamodelFiltering": false,
+    "fluentMethods": true,
+    "clientRootFolder": "",
+    "applications": "*"
+}

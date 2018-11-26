@@ -1,0 +1,45 @@
+
+entity Cashier 
+{
+    firstName String,
+	lastName String,
+	email String
+}
+
+
+entity StockItem
+{
+    numberOfProducts Integer,
+    barcode String
+}
+
+entity Product 
+{
+	name String,
+	price Double,
+	barcode String
+}
+
+entity Receipt 
+{
+	receiptNumber String,
+	date String,
+	paymentAmount String,
+	cashierName String
+}
+
+
+entity Debit
+{
+	transactionId String,
+    moneyAmount Double,
+    status Boolean
+}
+
+
+relationship OneToMany {
+	StockItem{product} to Product
+}
+
+
+
