@@ -37,10 +37,10 @@ public class CardReaderResource {
     /**
      * POST debitCard
      */
-    @PostMapping("/debit-card/{price}/{card}")
-    public Debit debitCard(Double price, Card card)
+    @PostMapping("/debit-card/{price}/{cardNumber}")
+    public Debit debitCard(Double price, String cardNumber)
     {
-        return bankService.debitCard(price, card);
+        return bankService.debitCard(price, cardNumber);
     }
 
 }

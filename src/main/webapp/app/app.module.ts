@@ -20,6 +20,7 @@ import { SalesAppEntityModule } from './entities/entity.module';
 import * as moment from 'moment';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent, ErrorComponent } from './layouts';
+import {CashDeskModule} from "app/cash-desk/cash-desk.module";
 
 @NgModule({
     imports: [
@@ -31,7 +32,8 @@ import { JhiMainComponent, NavbarComponent, FooterComponent, PageRibbonComponent
         SalesAppHomeModule,
         SalesAppAccountModule,
         // jhipster-needle-angular-add-module JHipster will add new module here
-        SalesAppEntityModule
+        SalesAppEntityModule,
+        CashDeskModule,
     ],
     declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
     providers: [

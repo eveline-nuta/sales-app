@@ -1,7 +1,9 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.SalesApp;
+import com.mycompany.myapp.domain.StockItem;
 import com.mycompany.myapp.repository.ProductRepository;
+import com.mycompany.myapp.repository.StockItemRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,12 +30,14 @@ public class InventoryResourceIntTest {
 
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private StockItemRepository stockItemRepository;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        InventoryResource inventoryResource = new InventoryResource(productRepository);
+        InventoryResource inventoryResource = new InventoryResource(productRepository, stockItemRepository);
         restMockMvc = MockMvcBuilders
             .standaloneSetup(inventoryResource)
             .build();

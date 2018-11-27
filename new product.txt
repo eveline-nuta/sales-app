@@ -1,0 +1,13 @@
+{
+	"barcode":"0123456789",
+	"id":1,
+	"name": "Gouda Cheese",
+	"price":0.3,
+	"stockItem":{
+		"id":1,
+		"numberOfProducts": 10,
+		"products": [
+		{}
+		]
+	}
+}

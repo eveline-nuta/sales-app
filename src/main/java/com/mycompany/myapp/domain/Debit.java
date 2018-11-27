@@ -32,6 +32,9 @@ public class Debit implements Serializable {
     @Column(name = "status")
     private Boolean status;
 
+    @Column(name = "account_balance")
+    private Double accountBalance;
+
     // jhipster-needle-entity-add-field - JHipster will add fields here, do not remove
     public Long getId() {
         return id;
@@ -81,6 +84,20 @@ public class Debit implements Serializable {
     }
     // jhipster-needle-entity-add-getters-setters - JHipster will add getters and setters here, do not remove
 
+    public Double getAccountBalance() {
+        return accountBalance;
+    }
+
+    //????
+    public Debit accountBalance( Double accountBalance) {
+        this.accountBalance = accountBalance;
+        return this;
+    }
+
+    public void setAccountBalance(Double accountBalance) {
+        this.accountBalance = accountBalance;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -108,6 +125,8 @@ public class Debit implements Serializable {
             ", transactionId='" + getTransactionId() + "'" +
             ", moneyAmount=" + getMoneyAmount() +
             ", status='" + isStatus() + "'" +
-            "}";
+            ", new account balance='" + getAccountBalance() +
+        "}";
     }
+
 }

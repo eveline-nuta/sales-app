@@ -1,0 +1,23 @@
+<button *ngIf="!isSaleStarted" (click)="startNewSale()">Start new sale</button>
+<div *ngIf="isSaleStarted">Sale is started.</div>
+<button *ngIf="isSaleStarted" (click)="endSale()">End sale</button>
+
+<div *ngIf="isSaleStarted" class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th><span>Name</span></th>
+            <th><span>Price</span></th>
+            <th><span>Barcode</span></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let product of products">
+            <td>{{product.name}}</td>
+            <td>{{product.price}}</td>
+            <td>{{product.barcode}}</td>
+        </tr>
+        </tbody>
+    </table>
+    <div>Total: {{ total }}</div>
+</div>

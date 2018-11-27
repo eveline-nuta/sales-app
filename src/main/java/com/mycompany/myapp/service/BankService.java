@@ -34,17 +34,31 @@ public class BankService
 
     }
 
-    public Debit debitCard(Double price, Card card)
+    public Debit debitCard(Double price, String cardNumber)
     {
 
         Debit debit = new Debit();
+        Card selectedCard = null;
 
-        if (card.getBalance() >= price)
+        for(Card item:acceptedCards)
         {
-            card.setBalance(card.getBalance() - price);
+            if (item.getCardNumber().equals(cardNumber))
+            {
+                item.setBalance(item.getBalance());
+                item.setCardNumber(item.getCardNumber());
+                item.setPin(item.getPin());
+                selectedCard = item;
+            }
+
+        }
+//problema e ca nu modific si variabila adevarata
+        if (selectedCard != null && selectedCard.getBalance() >= price)
+        {
+            selectedCard.setBalance(selectedCard.getBalance() - price);
             debit.setMoneyAmount(price);
             debit.setStatus(true);
             debit.setTransactionId(UUID.randomUUID().toString());
+            debit.setAccountBalance(selectedCard.getBalance());
         }
 
         else
@@ -52,7 +66,8 @@ public class BankService
             debit.setStatus(false);
             debit.setTransactionId(UUID.randomUUID().toString());
             debit.setMoneyAmount(0.0);
-    }
+            debit.setAccountBalance(selectedCard.getBalance());
+        }
         return debit;
     }
 

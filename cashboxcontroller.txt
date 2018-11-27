@@ -1,0 +1,29 @@
+package com.mycompany.myapp.web.rest;
+
+import com.mycompany.myapp.domain.Product;
+import com.mycompany.myapp.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * CashBoxControllerResource controller
+ */
+@RestController
+@RequestMapping("/api/cash-box-controller")
+public class CashBoxResource {
+
+    private final Logger log = LoggerFactory.getLogger(CashBoxResource.class);
+
+    public CashBoxResource() {}
+
+    /**
+    * POST cashPayment
+    */
+    @PostMapping("/cash-payment")
+    public String cashPayment(Double amount) {
+        //remove products from stock
+        return "cash Payment chosen";
+    }
+

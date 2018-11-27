@@ -1,6 +1,7 @@
 package com.mycompany.myapp.web.rest;
 
 import com.mycompany.myapp.domain.Product;
+import com.mycompany.myapp.domain.StockItem;
 import com.mycompany.myapp.repository.ProductRepository;
 import com.mycompany.myapp.repository.StockItemRepository;
 import io.github.jhipster.web.util.ResponseUtil;
@@ -22,7 +23,11 @@ public class InventoryResource {
 
     private ProductRepository productRepository;
 
-    public InventoryResource(ProductRepository productRepository) {
+    private StockItemRepository stockItemRepository;
+
+    public InventoryResource(ProductRepository productRepository, StockItemRepository stockItemRepository) {
+
+        this.stockItemRepository = stockItemRepository;
         this.productRepository = productRepository;
     }
 
@@ -47,7 +52,9 @@ public class InventoryResource {
             return true;
     }
 
-
+    /**
+     * GET verifyProductStock
+     */
     @GetMapping("/verify-product-stock/{id}")
     public Boolean verifyProductStock(Long id) {
 
@@ -62,7 +69,7 @@ public class InventoryResource {
     }
 
     /**
-     * POST removeProductFromStock
+     * POST updateStock
      */
 
     @PostMapping("/update-stock/{id}/{amount}")
@@ -70,25 +77,32 @@ public class InventoryResource {
         Optional<Product> repoResponse = productRepository.findById(id);
         if (repoResponse.isPresent()) {
             Product product = repoResponse.get();
-            if (product.getStockItem().getNumberOfProducts() > amount) {
-                product.getStockItem().setNumberOfProducts(product.getStockItem().getNumberOfProducts() - amount);
-            } else {
-                product.getStockItem().setNumberOfProducts(0);
+            Optional<StockItem> repoStackResponse = stockItemRepository.findById(product.getStockItem().getId());
+            if(repoStackResponse.isPresent()) {
+                StockItem stockItem = repoStackResponse.get();
+                if (stockItem.getNumberOfProducts() > amount) {
+                    stockItem.setNumberOfProducts(product.getStockItem().getNumberOfProducts() - amount);
+                } else {
+                    stockItem.setNumberOfProducts(0);
+                }
+                stockItemRepository.save(stockItem);
+                return true;
             }
-            productRepository.save(product);
-            return true;
         }
-        else {
-            return false;
-        }
-
+        return false;
     }
 
     @DeleteMapping("/remove-product/{id}")
-    public String removeProduct(@PathVariable Long id) {
+    public Boolean removeProduct(@PathVariable Long id)
+    {
+        if(!productRepository.findById(id).isPresent())
+        {
+            return false;
+        }
+
         productRepository.deleteById(id);
-        return "removed the Product from the Stock";
-    }
+        return true;
+      }
 
 
 }
