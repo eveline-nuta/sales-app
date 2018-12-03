@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Account, Principal} from "app/core";
-import {EventManager} from "@angular/platform-browser";
 import {JhiEventManager} from "ng-jhipster";
 import {Product} from "app/shared/model/product.model";
+import {CashDeskService} from "app/cash-desk/cash-desk.service";
 
 @Component({
     selector: 'cash-desk',
@@ -11,39 +11,88 @@ import {Product} from "app/shared/model/product.model";
 })
 export class CashDeskComponent implements OnInit {
 
+    isTesting: boolean;
     account: Account;
     isSaleStarted: boolean;
     products: Array<Product>;
     total: number;
+    barcode: string = '';
+    changeAmount: string;
+    paymentResponse: string;
+    cashAmount: string = '';
+    cardNumber: string = '';
+    pin: string = '';
+    //TODO do i need so many vars?
+    updateStockResult: string = '';
+    getProductResult: string = '';
+    verifyItemResult: string = '';
+    removeProductResult: string = '';
 
-    constructor(private principal: Principal, private eventManager: JhiEventManager) {
-        let productMock = new Product();
-        productMock.barcode = "1234567";
-        productMock.name = "ceapa";
-        productMock.price = 12;
-        let productMock1 = new Product();
-        productMock1.barcode = "524523";
-        productMock1.name = "varza";
-        productMock1.price = 45;
-        this.total = 0;
-        this.products = [productMock, productMock1];
-        this.calculateTotal();
+    constructor(private principal: Principal, private eventManager: JhiEventManager, private cashDeskService: CashDeskService) {
+     this.init();
     }
 
-    calculateTotal(){
+    init(){
+        this.total = 0;
+        this.products = [];
+        this.calculateTotal();
+        this.isTesting = false;
+        this.changeAmount = '';
+        this.cashAmount = '';
+        this.pin = '';
+        this.cardNumber = '';
+        this.barcode = '';
+    }
+
+    calculateTotal() {
+        this.total = 0;
         this.products.forEach((product) => {
             this.total = this.total + product.price;
         });
     }
 
-    startNewSale(){
+    startNewSale() {
         this.isSaleStarted = true;
+        this.init();
     }
 
-    endSale(){
+    endSale() {
         this.isSaleStarted = false;
     }
 
+    enterItemIdentifier() {
+        this.getProduct(this.barcode);
+    }
+
+    cashPayment() {
+        this.changeAmount = (+this.cashAmount - this.total).toString();
+        //update stock
+    }
+
+//============CARD READER CONTROLLER==============================
+    validateCard() {
+    }
+
+    debitCard() {
+    }
+
+    cardPayment() {
+
+        if (this.cardNumber == "correct" && this.pin == "correct") {
+            this.paymentResponse = 'Payment successful';
+        }
+        else {
+            this.paymentResponse = 'Payment declined';
+        }
+    }
+
+    //daca as avea doar 6 admitted barcodes intre 100000000000 si 100000000005
+
+//============SCANNER CONTROLLER==============================
+    scanItem() {
+        let barcode = Math.floor(Math.random() * (100000000005 - 100000000000 + 1) + 100000000000);
+        this.getProduct(barcode.toString());
+    }
 
     ngOnInit() {
         this.principal.identity().then(account => {
@@ -60,5 +109,86 @@ export class CashDeskComponent implements OnInit {
         });
     }
 
+//============INVENTORY CONTROLLER==============================
 
+    updateStock() {
+        let id = 12201;
+        let amount = 3;
+
+        this.cashDeskService.updateStock(id, amount).subscribe((result) => {
+            if (result.body === true) {
+                //if answer is true
+                this.updateStockResult = "Stock Updated";
+            } else {
+                //if answer is false
+                this.updateStockResult = 'Stock not updated';
+            }
+        });
+
+    }
+
+    getProduct(id) {
+        this.cashDeskService.getProduct(id).subscribe((result) => {
+                if (result.body) {
+                    this.products.push(result.body);
+                    this.calculateTotal();
+                }
+                else
+                    this.getProductResult = "product doesn't exist";
+
+            },
+            (error) => {
+                this.getProductResult = "product doesn't exist";
+            });
+    }
+
+    verifyItem() {
+
+        let id = 12201;
+
+        this.cashDeskService.verifyItem(id).subscribe((result) => {
+            if (result.body === false) {
+                //if barcode doesn't exist
+                this.verifyItemResult = "Barcode invalid";
+            } else {
+                //if barcode exists
+                this.verifyItemResult = "Barcode valid";
+            }
+        });
+
+    }
+
+    removeProduct() {
+        let id = 12201;
+
+        this.cashDeskService.removeProduct(id).subscribe((result) => {
+            if (result.body === false) {
+                //if product doesn't exist
+                this.removeProductResult = 'Could not remove product';
+            } else {
+                //if product exists
+                this.removeProductResult = 'Product removed from stock';
+            }
+        });
+    }
+
+    //USELESS
+    verifyProductStock() {
+        let id = 12201;
+
+        this.cashDeskService.verifyProductStock(id).subscribe((result) => {
+            if (result.body === false) {
+                //if prod does not exist
+                this.updateStockResult = 'does not exist';
+            } else {
+                //if prod exists
+                this.updateStockResult = 'it exists';
+            }
+        });
+
+    }
+
+    //============PRINTER CONTROLLER==============================
+    printReceipt() {
+    }
 }

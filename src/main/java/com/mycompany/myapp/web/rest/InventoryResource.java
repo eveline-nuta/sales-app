@@ -37,36 +37,20 @@ public class InventoryResource {
     /**
      * GET getProduct
      */
-    @GetMapping("/get-product/{id}")
-    public ResponseEntity<Product> getProduct(@PathVariable Long id) {
-        Optional<Product> product = productRepository.findById(id);
-        return ResponseUtil.wrapOrNotFound(product);
+    @GetMapping("/get-product/{barcode}")
+    public Product getProduct(@PathVariable String barcode) {
+        return productRepository.findByBarcode(barcode);
     }
 
     @GetMapping("/verify-item/{id}")
-    public Boolean verifyItem(Long id) {
+    public Boolean verifyItem(@PathVariable Long id) {
 
-        if(!productRepository.findById(id).isPresent())
+         if(!productRepository.findById(id).isPresent())
             return false;
         else
             return true;
     }
 
-    /**
-     * GET verifyProductStock
-     */
-    @GetMapping("/verify-product-stock/{id}")
-    public Boolean verifyProductStock(Long id) {
-
-        Optional<Product> repoResponse = productRepository.findById(id);
-        if(repoResponse.isPresent()) {
-            Product product = repoResponse.get();
-            if(product.getStockItem().getNumberOfProducts() > 0)
-                return true;
-            return false;
-        }
-        return false;
-    }
 
     /**
      * POST updateStock
@@ -104,6 +88,21 @@ public class InventoryResource {
         return true;
       }
 
+    /**
+     * GET verifyProductStock
+     */
+    @GetMapping("/verify-product-stock/{id}")
+    public Boolean verifyProductStock(Long id) {
+
+        Optional<Product> repoResponse = productRepository.findById(id);
+        if(repoResponse.isPresent()) {
+            Product product = repoResponse.get();
+            if(product.getStockItem().getNumberOfProducts() > 0)
+                return true;
+            return false;
+        }
+        return false;
+    }
 
 }
 
