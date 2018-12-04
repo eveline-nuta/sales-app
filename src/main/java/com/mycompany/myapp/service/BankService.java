@@ -51,7 +51,7 @@ public class BankService
             }
 
         }
-//problema e ca nu modific si variabila adevarata
+
         if (selectedCard != null && selectedCard.getBalance() >= price)
         {
             selectedCard.setBalance(selectedCard.getBalance() - price);

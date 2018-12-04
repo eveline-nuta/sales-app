@@ -25,10 +25,10 @@ public class CardReaderResource {
 
 
     /**
-     * GET getValidation
+     * POST validateCard
      */
-    @GetMapping("/get-validation")
-    public Boolean getValidation(String cardNumber,String pin)
+    @PostMapping("/validate-card/{cardNumber}/{pin}")
+    public Boolean validateCard(String cardNumber,String pin)
     {
         return bankService.verifyCard(cardNumber, pin);
     }

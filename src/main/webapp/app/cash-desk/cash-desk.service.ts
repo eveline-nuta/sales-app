@@ -2,16 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { SERVER_API_URL } from 'app/app.constants';
 import {Product} from "app/shared/model/product.model";
+import {IDebit} from "app/shared/model/debit.model";
 
 @Injectable({ providedIn: 'root' })
 export class CashDeskService {
     public inventoryControllerBaseUrl = SERVER_API_URL + '/api/inventory-controller/';
-
+    public cardReaderControllerBaseUrl = SERVER_API_URL + '/api/card-reader-controller/';
 
     constructor(private httpClient: HttpClient) {}
 
 /*
-FOR INVENTORY RESOURCE
+FOR INVENTORY CONTROLLER
  */
     public updateStock(id: number, amount: number){
         return this.httpClient.post<boolean>(this.inventoryControllerBaseUrl + 'update-stock/' + id + '/' + amount,null, { observe: 'response' });
@@ -32,11 +33,17 @@ FOR INVENTORY RESOURCE
     public verifyProductStock(id: number){
         return this.httpClient.get<boolean>(this.inventoryControllerBaseUrl + 'verify-product-stock/' + id , { observe: 'response' });
     }
-
-    /*
-FOR INVENTORY RESOURCE
+ /*
+FOR CARD READER CONTROLLER
  */
-//POST /api/card-reader-controller/debit-card/{price}/{cardNumber}
+    public debitCard(price: number, cardNumber: string){
+        return this.httpClient.post<IDebit>(this.cardReaderControllerBaseUrl + 'debit-card/' + price + '/' + cardNumber,null, { observe: 'response' });
+    }
+
+
+    public validateCard(cardNumber: string, pin: string){
+        return this.httpClient.post<boolean>(this.cardReaderControllerBaseUrl + 'validate-card/' + cardNumber + '/' + pin,null, { observe: 'response' });
+    }
 
 
 }

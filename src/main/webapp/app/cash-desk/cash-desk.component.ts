@@ -4,6 +4,7 @@ import {JhiEventManager} from "ng-jhipster";
 import {Product} from "app/shared/model/product.model";
 import {CashDeskService} from "app/cash-desk/cash-desk.service";
 
+
 @Component({
     selector: 'cash-desk',
     templateUrl: './cash-desk.component.html',
@@ -22,11 +23,14 @@ export class CashDeskComponent implements OnInit {
     cashAmount: string = '';
     cardNumber: string = '';
     pin: string = '';
-    //TODO do i need so many vars?
+
+    //result variables
     updateStockResult: string = '';
     getProductResult: string = '';
     verifyItemResult: string = '';
     removeProductResult: string = '';
+    validateCardResult: string = '';
+
 
     constructor(private principal: Principal, private eventManager: JhiEventManager, private cashDeskService: CashDeskService) {
      this.init();
@@ -70,21 +74,39 @@ export class CashDeskComponent implements OnInit {
     }
 
 //============CARD READER CONTROLLER==============================
-    validateCard() {
+
+    cardPayment()
+    {
+        this.cashDeskService.validateCard(this.cardNumber, this.pin).subscribe((result) => {
+
+            if (result.body === true)
+            {
+                //if card is valid
+                this.validateCardResult = 'Card valid';
+
+                //debit the card
+
+                this.cashDeskService.debitCard(this.total, this.cardNumber).subscribe((result) => {
+                    if (result.body)
+                    {
+                        //if the debit exists
+                        this.paymentResponse = 'Payment approved';
+                    } else {
+                        //if answer is false
+                        this.paymentResponse = 'Payment declined';
+                    }
+                });
+
+            }
+
+            else
+                {
+                //if answer is false
+                this.validateCardResult = 'Card invalid';
+                }
+        });
     }
 
-    debitCard() {
-    }
-
-    cardPayment() {
-
-        if (this.cardNumber == "correct" && this.pin == "correct") {
-            this.paymentResponse = 'Payment successful';
-        }
-        else {
-            this.paymentResponse = 'Payment declined';
-        }
-    }
 
     //daca as avea doar 6 admitted barcodes intre 100000000000 si 100000000005
 
@@ -127,8 +149,8 @@ export class CashDeskComponent implements OnInit {
 
     }
 
-    getProduct(id) {
-        this.cashDeskService.getProduct(id).subscribe((result) => {
+    getProduct(barcode) {
+        this.cashDeskService.getProduct(barcode).subscribe((result) => {
                 if (result.body) {
                     this.products.push(result.body);
                     this.calculateTotal();
