@@ -28,7 +28,7 @@ public class CardReaderResource {
      * POST validateCard
      */
     @PostMapping("/validate-card/{cardNumber}/{pin}")
-    public Boolean validateCard(String cardNumber,String pin)
+    public Boolean validateCard(@PathVariable String cardNumber, @PathVariable String pin)
     {
         return bankService.verifyCard(cardNumber, pin);
     }
@@ -38,7 +38,7 @@ public class CardReaderResource {
      * POST debitCard
      */
     @PostMapping("/debit-card/{price}/{cardNumber}")
-    public Debit debitCard(Double price, String cardNumber)
+    public Debit debitCard(@PathVariable Double price, @PathVariable String cardNumber)
     {
         return bankService.debitCard(price, cardNumber);
     }

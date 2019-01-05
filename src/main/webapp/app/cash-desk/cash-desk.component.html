@@ -4,6 +4,8 @@
 <br />
   <button *ngIf="isSaleStarted" (click)="enterItemIdentifier()">Enter barcode</button>
   <input *ngIf="isSaleStarted" type="text" [(ngModel)]="barcode">
+<div>{{enterItemIdentifierResult}}</div>
+
 <br />
 <br />
 <button *ngIf="isSaleStarted" (click)="scanItem()">Scan item </button>
@@ -32,13 +34,20 @@
     <br />
     <button *ngIf="isSaleStarted" (click)="cashPayment()">Cash Payment </button>
     <input *ngIf="isSaleStarted" type="text"  matInput placeholder="Cash Amount" [(ngModel)]="cashAmount">
-    <span *ngIf="changeAmount"> Change: {{ changeAmount }}</span>
+    <span *ngIf="changeAmount"> Change Amount: {{ changeAmount }}</span>
+    <div> {{cashPaymentResult}}</div>
+
     <br />
     <br />
     <button *ngIf="isSaleStarted" (click)="cardPayment()">Card Payment </button>
     <input *ngIf="isSaleStarted" type="text"  matInput placeholder="Card Number" [(ngModel)]="cardNumber">
 
     <input *ngIf="isSaleStarted" type="text"  matInput placeholder="Pin" [(ngModel)]="pin">
+
+    <div> {{validateCardResult}}</div>
+    <div> {{paymentResponse}}</div>
+    <div> {{cardPaymentResult}}</div>
+
 
     <br/>
     <br/>

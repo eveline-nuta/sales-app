@@ -45,7 +45,7 @@ public class InventoryResource {
     @GetMapping("/verify-item/{id}")
     public Boolean verifyItem(@PathVariable Long id) {
 
-         if(!productRepository.findById(id).isPresent())
+        if (!productRepository.findById(id).isPresent())
             return false;
         else
             return true;
@@ -56,13 +56,13 @@ public class InventoryResource {
      * POST updateStock
      */
 
-    @PostMapping("/update-stock/{id}/{amount}")
-    public Boolean updateStock(@PathVariable Long id, @PathVariable Integer amount) {
-        Optional<Product> repoResponse = productRepository.findById(id);
+    @PostMapping("/update-stock/{productId}/{amount}")
+    public Boolean updateStock(@PathVariable Long productId, @PathVariable Integer amount) {
+        Optional<Product> repoResponse = productRepository.findById(productId);
         if (repoResponse.isPresent()) {
             Product product = repoResponse.get();
             Optional<StockItem> repoStackResponse = stockItemRepository.findById(product.getStockItem().getId());
-            if(repoStackResponse.isPresent()) {
+            if (repoStackResponse.isPresent()) {
                 StockItem stockItem = repoStackResponse.get();
                 if (stockItem.getNumberOfProducts() > amount) {
                     stockItem.setNumberOfProducts(product.getStockItem().getNumberOfProducts() - amount);
@@ -77,30 +77,24 @@ public class InventoryResource {
     }
 
     @DeleteMapping("/remove-product/{id}")
-    public Boolean removeProduct(@PathVariable Long id)
-    {
-        if(!productRepository.findById(id).isPresent())
-        {
+    public Boolean removeProduct(@PathVariable Long id) {
+        if (!productRepository.findById(id).isPresent()) {
             return false;
         }
 
         productRepository.deleteById(id);
         return true;
-      }
+    }
 
     /**
      * GET verifyProductStock
      */
-    @GetMapping("/verify-product-stock/{id}")
-    public Boolean verifyProductStock(Long id) {
+    @GetMapping("/verify-product-stock/{barcode}")
+    public Boolean verifyProductStock(@PathVariable String barcode) {
 
-        Optional<Product> repoResponse = productRepository.findById(id);
-        if(repoResponse.isPresent()) {
-            Product product = repoResponse.get();
-            if(product.getStockItem().getNumberOfProducts() > 0)
-                return true;
-            return false;
-        }
+        Product product = productRepository.findByBarcode(barcode);
+        if (product.getStockItem().getNumberOfProducts() > 0)
+            return true;
         return false;
     }
 

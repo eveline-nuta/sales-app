@@ -3,7 +3,7 @@ import {Account, Principal} from "app/core";
 import {JhiEventManager} from "ng-jhipster";
 import {Product} from "app/shared/model/product.model";
 import {CashDeskService} from "app/cash-desk/cash-desk.service";
-
+3
 
 @Component({
     selector: 'cash-desk',
@@ -30,6 +30,9 @@ export class CashDeskComponent implements OnInit {
     verifyItemResult: string = '';
     removeProductResult: string = '';
     validateCardResult: string = '';
+    cashPaymentResult: string='';
+    cardPaymentResult: string='';
+    enterItemIdentifierResult='';
 
 
     constructor(private principal: Principal, private eventManager: JhiEventManager, private cashDeskService: CashDeskService) {
@@ -46,6 +49,28 @@ export class CashDeskComponent implements OnInit {
         this.pin = '';
         this.cardNumber = '';
         this.barcode = '';
+        this.updateStockResult= '';
+       this.getProductResult= '';
+       this.verifyItemResult = '';
+       this.removeProductResult = '';
+       this.validateCardResult = '';
+       this.cashPaymentResult='';
+       this.cardPaymentResult='';
+       this.paymentResponse='';
+       this.enterItemIdentifierResult='';
+    }
+
+    emptyCart()
+    {
+        this.total = 0;
+        this.products = [];
+        this.calculateTotal();
+        this.isTesting = false;
+        this.cashAmount = '';
+        this.pin = '';
+        this.cardNumber = '';
+        this.barcode = '';
+        this.enterItemIdentifierResult='';
     }
 
     calculateTotal() {
@@ -65,12 +90,36 @@ export class CashDeskComponent implements OnInit {
     }
 
     enterItemIdentifier() {
-        this.getProduct(this.barcode);
+        this.cashDeskService.verifyProductStock(this.barcode.toString()).subscribe((result) => {
+            if (result.body) {
+                this.getProduct(this.barcode);
+                this.enterItemIdentifierResult='Product added to cart';
+            } else {
+                this.enterItemIdentifierResult='Product not on stock';
+            }
+        },(error) => {
+            this.enterItemIdentifierResult = 'Product does not exist';
+        });
     }
 
-    cashPayment() {
-        this.changeAmount = (+this.cashAmount - this.total).toString();
-        //update stock
+    cashPayment()
+    {
+        let rest=+this.cashAmount - this.total
+        this.changeAmount = rest.toString();
+
+         if (rest>=0)
+         {
+             this.products.forEach((product) =>
+            {
+                this.updateStock(product.id,1)
+             });
+
+             this.cashPaymentResult='Cash Payment successful';
+             this.emptyCart();
+         }
+
+         else this.cashPaymentResult='Not enough cash';
+
     }
 
 //============CARD READER CONTROLLER==============================
@@ -90,10 +139,28 @@ export class CashDeskComponent implements OnInit {
                     if (result.body)
                     {
                         //if the debit exists
-                        this.paymentResponse = 'Payment approved';
+
+                        if(result.body.status===true)
+                        {
+                            this.paymentResponse = 'Payment approved';
+
+                            this.products.forEach((product) => {
+                                this.updateStock(product.id, 1)
+                            });
+                            this.cardPaymentResult = 'Card Payment successful';
+                            this.emptyCart();
+
+                        }else {
+                            this.paymentResponse = 'Not enough money, payment declined';
+                            this.cardPaymentResult = 'Card Payment unsuccessful';
+
+                        }
+
+
                     } else {
                         //if answer is false
                         this.paymentResponse = 'Payment declined';
+                        this.cardPaymentResult = 'Card Payment unsuccessful';
                     }
                 });
 
@@ -111,9 +178,17 @@ export class CashDeskComponent implements OnInit {
     //daca as avea doar 6 admitted barcodes intre 100000000000 si 100000000005
 
 //============SCANNER CONTROLLER==============================
-    scanItem() {
-        let barcode = Math.floor(Math.random() * (100000000005 - 100000000000 + 1) + 100000000000);
-        this.getProduct(barcode.toString());
+    //get a random barcode from a product and add it to the cart if it is on stock
+    scanItem()
+    {
+        let barcode = Math.floor(Math.random() * (100000000006 - 100000000000 + 1) + 100000000000);
+        this.cashDeskService.verifyProductStock(barcode.toString()).subscribe((result) => {
+        if (result.body) {
+            this.getProduct(barcode.toString());
+        } else {
+            return false;
+        }
+    });
     }
 
     ngOnInit() {
@@ -133,14 +208,12 @@ export class CashDeskComponent implements OnInit {
 
 //============INVENTORY CONTROLLER==============================
 
-    updateStock() {
-        let id = 12201;
-        let amount = 3;
+    updateStock(productId: number,amount: number) {
 
-        this.cashDeskService.updateStock(id, amount).subscribe((result) => {
+        this.cashDeskService.updateStock(productId, amount).subscribe((result) => {
             if (result.body === true) {
                 //if answer is true
-                this.updateStockResult = "Stock Updated";
+                this.updateStockResult = "Stock updated";
             } else {
                 //if answer is false
                 this.updateStockResult = 'Stock not updated';
@@ -164,9 +237,7 @@ export class CashDeskComponent implements OnInit {
             });
     }
 
-    verifyItem() {
-
-        let id = 12201;
+    verifyItem(id) {
 
         this.cashDeskService.verifyItem(id).subscribe((result) => {
             if (result.body === false) {
@@ -180,8 +251,7 @@ export class CashDeskComponent implements OnInit {
 
     }
 
-    removeProduct() {
-        let id = 12201;
+    removeProduct(id) {
 
         this.cashDeskService.removeProduct(id).subscribe((result) => {
             if (result.body === false) {
@@ -192,22 +262,6 @@ export class CashDeskComponent implements OnInit {
                 this.removeProductResult = 'Product removed from stock';
             }
         });
-    }
-
-    //USELESS
-    verifyProductStock() {
-        let id = 12201;
-
-        this.cashDeskService.verifyProductStock(id).subscribe((result) => {
-            if (result.body === false) {
-                //if prod does not exist
-                this.updateStockResult = 'does not exist';
-            } else {
-                //if prod exists
-                this.updateStockResult = 'it exists';
-            }
-        });
-
     }
 
     //============PRINTER CONTROLLER==============================

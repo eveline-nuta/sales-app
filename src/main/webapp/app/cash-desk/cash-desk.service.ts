@@ -14,8 +14,8 @@ export class CashDeskService {
 /*
 FOR INVENTORY CONTROLLER
  */
-    public updateStock(id: number, amount: number){
-        return this.httpClient.post<boolean>(this.inventoryControllerBaseUrl + 'update-stock/' + id + '/' + amount,null, { observe: 'response' });
+    public updateStock(productId: number, amount: number){
+        return this.httpClient.post<boolean>(this.inventoryControllerBaseUrl + 'update-stock/' + productId + '/' + amount,null, { observe: 'response' });
     }
 
     public getProduct(id: string){
@@ -30,7 +30,7 @@ FOR INVENTORY CONTROLLER
         return this.httpClient.delete<boolean>(this.inventoryControllerBaseUrl + 'remove-product/' + id , { observe: 'response' });
     }
     //useless
-    public verifyProductStock(id: number){
+    public verifyProductStock(id: string){
         return this.httpClient.get<boolean>(this.inventoryControllerBaseUrl + 'verify-product-stock/' + id , { observe: 'response' });
     }
  /*

@@ -16,7 +16,6 @@
             <tr>
             <th><span>ID</span></th>
             <th><span>Number Of Products</span></th>
-            <th><span>Barcode</span></th>
             <th></th>
             </tr>
             </thead>
@@ -24,7 +23,6 @@
             <tr *ngFor="let stockItem of stockItems ;trackBy: trackId">
                 <td><a [routerLink]="['/stock-item', stockItem.id, 'view' ]">{{stockItem.id}}</a></td>
                 <td>{{stockItem.numberOfProducts}}</td>
-                <td>{{stockItem.barcode}}</td>
                 <td class="text-right">
                     <div class="btn-group flex-btn-group-container">
                         <button type="submit"
