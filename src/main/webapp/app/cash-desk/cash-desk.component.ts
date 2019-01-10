@@ -109,9 +109,9 @@ export class CashDeskComponent implements OnInit {
 
          if (rest>=0)
          {
-             this.products.forEach((product) =>
-            {
-                this.updateStock(product.id,1)
+             let grouped = this.groupBy(this.products, product => product.id);
+             grouped.forEach((value: Array<Product>, key: number) => {
+                 this.updateStock(key, value.length);
              });
 
              this.cashPaymentResult='Cash Payment successful';
@@ -144,8 +144,9 @@ export class CashDeskComponent implements OnInit {
                         {
                             this.paymentResponse = 'Payment approved';
 
-                            this.products.forEach((product) => {
-                                this.updateStock(product.id, 1)
+                            let grouped = this.groupBy(this.products, product => product.id);
+                            grouped.forEach((value: Array<Product>, key: number) => {
+                                this.updateStock(key, value.length);
                             });
                             this.cardPaymentResult = 'Card Payment successful';
                             this.emptyCart();
@@ -174,7 +175,19 @@ export class CashDeskComponent implements OnInit {
         });
     }
 
-
+    groupBy(list, keyGetter) {
+        const map = new Map();
+        list.forEach(item => {
+            const key = keyGetter(item);
+            const collection = map.get(key);
+            if (!collection) {
+                map.set(key, [item]);
+            } else {
+                collection.push(item);
+            }
+        });
+        return map;
+    }
     //daca as avea doar 6 admitted barcodes intre 100000000000 si 100000000005
 
 //============SCANNER CONTROLLER==============================
