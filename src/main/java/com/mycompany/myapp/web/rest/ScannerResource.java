@@ -25,9 +25,12 @@ public class ScannerResource {
     public ScannerResource() {
         rand = new Random();
         productBarcodes = new ArrayList<String>();
-        productBarcodes.add("123456789000");
-        productBarcodes.add("000000000000");
-        productBarcodes.add("111111111111");
+        productBarcodes.add("100000000001");
+        productBarcodes.add("100000000002");
+        productBarcodes.add("100000000003");
+        productBarcodes.add("100000000004");
+        productBarcodes.add("100000000005");
+        productBarcodes.add("100000000006");
     }
     /**
     * GET scanItem

@@ -277,7 +277,5 @@ export class CashDeskComponent implements OnInit {
         });
     }
 
-    //============PRINTER CONTROLLER==============================
-    printReceipt() {
-    }
+
 }
